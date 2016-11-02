@@ -13,7 +13,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.cal.calshop.BuildConfig;
 import com.example.cal.calshop.R;
+import com.example.cal.calshop.model.ShoppingList;
+import com.example.cal.calshop.utils.Constants;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 /**
  * Adds a new shopping list
@@ -90,6 +97,12 @@ public class AddListDialogFragment extends DialogFragment {
      */
     public void addShoppingList() {
 
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        String userEnteredName = mEditTextListName.getText().toString();
+        String owner = "Calvin";
+
+        ShoppingList sList = new ShoppingList(userEnteredName, owner);
+        rootRef.child(Constants.KEY_LIST).push().setValue(sList);
     }
 
 }
