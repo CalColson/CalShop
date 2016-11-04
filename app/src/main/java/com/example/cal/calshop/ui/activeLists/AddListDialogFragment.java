@@ -99,10 +99,10 @@ public class AddListDialogFragment extends DialogFragment {
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         String userEnteredName = mEditTextListName.getText().toString();
-        String owner = "Calvin";
+        String owner = Constants.DEFAULT_OWNER;
 
         ShoppingList sList = new ShoppingList(userEnteredName, owner);
-        rootRef.child(Constants.KEY_LIST).push().setValue(sList);
+        rootRef.child(Constants.KEY_LISTS).push().setValue(sList);
     }
 
 }

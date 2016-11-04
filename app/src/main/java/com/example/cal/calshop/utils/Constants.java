@@ -10,10 +10,17 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 public final class Constants {
 
-    public final static String KEY_LIST = "activeLists";
+    public final static String KEY_LISTS = "activeLists";
     public final static String KEY_LIST_NAME = "listName";
     public final static String KEY_TIMESTAMP_LAST_CHANGED = "dateLastChanged";
     public final static String KEY_DATE = "date";
+    public final static String KEY_LIST_ID = "listId";
+
+    public final static String KEY_ITEMS = "shoppingListItems";
+    public final static String KEY_ITEM_NAME = "itemName";
+    public final static String KEY_ITEM_ID = "itemId";
+
+    public final static String DEFAULT_OWNER = "Calvin";
 
     /**
      * Constants for Firebase URL
@@ -25,7 +32,9 @@ public final class Constants {
      * where active lists are stored (ie "activeLists")
      */
     public static DatabaseReference FIREBASE_LOCATION_ACTIVE_LISTS = FirebaseDatabase.getInstance().getReference()
-            .child(KEY_LIST);
+            .child(KEY_LISTS);
+    public static DatabaseReference FIREBASE_LOCATION_ACTIVE_ITEMS = FirebaseDatabase.getInstance().getReference()
+            .child(KEY_ITEMS);
     public static final String FIREBASE_URL_ACTIVE_LIST = FIREBASE_URL + "activeList/";
 
 

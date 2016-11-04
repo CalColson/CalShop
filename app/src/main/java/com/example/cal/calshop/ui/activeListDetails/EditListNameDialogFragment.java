@@ -20,14 +20,16 @@ import java.util.Map;
 public class EditListNameDialogFragment extends EditListDialogFragment {
     private static final String LOG_TAG = ActiveListDetailsActivity.class.getSimpleName();
     private String mListName;
+    private String mListId;
 
     /**
      * Public static constructor that creates fragment and passes a bundle with data into it when adapter is created
      */
-    public static EditListNameDialogFragment newInstance(ShoppingList shoppingList) {
+    public static EditListNameDialogFragment newInstance(ShoppingList shoppingList, String listId) {
         EditListNameDialogFragment editListNameDialogFragment = new EditListNameDialogFragment();
         Bundle bundle = EditListDialogFragment.newInstanceHelper(shoppingList, R.layout.dialog_edit_list);
         bundle.putString(Constants.KEY_LIST_NAME, shoppingList.getListName());
+        bundle.putString(Constants.KEY_LIST_ID, listId);
         editListNameDialogFragment.setArguments(bundle);
         return editListNameDialogFragment;
     }
@@ -40,6 +42,7 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
         super.onCreate(savedInstanceState);
 
         mListName = getArguments().getString(Constants.KEY_LIST_NAME);
+        mListId = getArguments().getString(Constants.KEY_LIST_ID);
         //Log.v(LOG_TAG, "mListName: " + mListName);
     }
 
@@ -62,7 +65,7 @@ public class EditListNameDialogFragment extends EditListDialogFragment {
     protected void doListEdit() {
         if (!mEditTextForList.getText().equals(mListName) &&
                 mEditTextForList.getText().length() > 0) {
-            DatabaseReference activeListRef = Constants.FIREBASE_LOCATION_ACTIVE_LISTS.child("-KVb4U0YCjJAkBxGG1JA");
+            DatabaseReference activeListRef = Constants.FIREBASE_LOCATION_ACTIVE_LISTS.child(mListId);
             HashMap<String, Object> listUpdateProperties = new HashMap<>();
             listUpdateProperties.put(Constants.KEY_LIST_NAME, mEditTextForList.getText().toString());
             HashMap<String, Object> dateMap = new HashMap<>();

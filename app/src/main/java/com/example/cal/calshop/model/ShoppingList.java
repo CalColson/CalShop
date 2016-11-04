@@ -5,10 +5,6 @@ import com.google.firebase.database.ServerValue;
 
 import java.util.HashMap;
 
-/**
- * Created by Cal on 11/1/2016.
- */
-
 public class ShoppingList {
     public static final String DATE_KEY = Constants.KEY_DATE;
 

@@ -8,19 +8,23 @@ import android.support.v7.app.AlertDialog;
 
 import com.example.cal.calshop.R;
 import com.example.cal.calshop.model.ShoppingList;
+import com.example.cal.calshop.utils.Constants;
+import com.google.firebase.database.DatabaseReference;
 
 /**
  * Lets the user remove active shopping list
  */
 public class RemoveListDialogFragment extends DialogFragment {
     final static String LOG_TAG = RemoveListDialogFragment.class.getSimpleName();
+    private String mListId;
 
     /**
      * Public static constructor that creates fragment and passes a bundle with data into it when adapter is created
      */
-    public static RemoveListDialogFragment newInstance(ShoppingList shoppingList) {
+    public static RemoveListDialogFragment newInstance(ShoppingList shoppingList, String listId) {
         RemoveListDialogFragment removeListDialogFragment = new RemoveListDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_LIST_ID, listId);
         removeListDialogFragment.setArguments(bundle);
         return removeListDialogFragment;
     }
@@ -31,6 +35,7 @@ public class RemoveListDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListId = getArguments().getString(Constants.KEY_LIST_ID);
     }
 
     @Override
@@ -57,7 +62,10 @@ public class RemoveListDialogFragment extends DialogFragment {
     }
 
     private void removeList() {
-
+        DatabaseReference listRef = Constants.FIREBASE_LOCATION_ACTIVE_LISTS.child(mListId);
+        DatabaseReference listItemsRef = Constants.FIREBASE_LOCATION_ACTIVE_ITEMS.child(mListId);
+        listRef.removeValue();
+        listItemsRef.removeValue();
     }
 
 }
