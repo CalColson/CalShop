@@ -34,6 +34,8 @@ public abstract class EditListDialogFragment extends DialogFragment {
      * @return
      */
     protected static Bundle newInstanceHelper(ShoppingList shoppingList, int resource) {
+        if (shoppingList != null) {}
+
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_LAYOUT_RESOURCE, resource);
         return bundle;

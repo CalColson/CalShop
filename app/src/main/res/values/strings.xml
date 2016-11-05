@@ -51,7 +51,9 @@
     <string name="action_edit_list_name">Edit list name</string>
 
     <!-- Edit List and Add Item Dialogs -->
+    <string name="title_add_user">Please enter your name</string>
     <string name="positive_button_add_list_item">Add item</string>
+    <string name="positive_button_add_user">Set name</string>
     <string name="positive_button_edit_item">Edit name</string>
     <string name="negative_button_cancel">Cancel</string>
     <string name="dialog_message_are_you_sure_remove_list">Are you sure you want to remove this list?</string>
@@ -146,6 +148,7 @@
     <string name="error_you_didnt_give_permissions">You must give ShoppingList++ permission to access your Google account information if you want to use Google sign-in.</string>
     <string name="error_email_taken">The email is already taken.</string>
     <string name="error_invalid_password_not_valid">Please enter a password that is at least 6 characters long.</string>
+    <string name="error_invalid_password_not_correct">Password is incorrect.</string>
     <string name="error_cannot_be_empty">This cannot be empty.</string>
 
     <!-- Google Errors -->

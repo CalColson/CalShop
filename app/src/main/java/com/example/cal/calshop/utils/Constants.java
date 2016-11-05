@@ -20,6 +20,7 @@ public final class Constants {
     public final static String KEY_ITEM_NAME = "itemName";
     public final static String KEY_ITEM_ID = "itemId";
 
+    public final static String KEY_USERS = "appUsers";
     public final static String DEFAULT_OWNER = "Calvin";
 
     /**
@@ -35,6 +36,8 @@ public final class Constants {
             .child(KEY_LISTS);
     public static DatabaseReference FIREBASE_LOCATION_ACTIVE_ITEMS = FirebaseDatabase.getInstance().getReference()
             .child(KEY_ITEMS);
+    public static DatabaseReference FIREBASE_LOCATION_ACTIVE_USERS = FirebaseDatabase.getInstance().getReference()
+            .child(KEY_USERS);
     public static final String FIREBASE_URL_ACTIVE_LIST = FIREBASE_URL + "activeList/";
 
 

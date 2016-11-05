@@ -1,8 +1,8 @@
 package com.example.cal.calshop.model;
 
 public class Item {
-    String itemName;
-    String owner;
+    private String itemName;
+    private String owner;
 
     public Item() {}
 

@@ -6,12 +6,12 @@ import com.google.firebase.database.ServerValue;
 import java.util.HashMap;
 
 public class ShoppingList {
-    public static final String DATE_KEY = Constants.KEY_DATE;
+    private static final String DATE_KEY = Constants.KEY_DATE;
 
-    String listName;
-    String owner;
-    HashMap<String, Object> dateCreated;
-    HashMap<String, Object> dateLastChanged;
+    private String listName;
+    private String owner;
+    private HashMap<String, Object> dateCreated;
+    private HashMap<String, Object> dateLastChanged;
 
     public ShoppingList() {
     }
