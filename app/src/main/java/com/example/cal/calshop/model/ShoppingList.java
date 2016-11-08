@@ -10,6 +10,8 @@ public class ShoppingList {
 
     private String listName;
     private String owner;
+    private boolean isShopping;
+    private HashMap<String, User> usersShopping;
     private HashMap<String, Object> dateCreated;
     private HashMap<String, Object> dateLastChanged;
 
@@ -19,6 +21,11 @@ public class ShoppingList {
     public ShoppingList(String listName, String owner) {
         this.listName = listName;
         this.owner = owner;
+        isShopping = false;
+        usersShopping = new HashMap<>();
+        //usersShopping.put("TestUser", new User("hi@hi.com", "testBoy"));
+        //usersShopping.put("TestUser2", new User("hi@hip.com", "testGirl"));
+        //usersShopping.put("TestUser3", new User("hi@hippy.com", "testMan"));
 
         HashMap<String, Object> dateCreatedObj = new HashMap<String, Object>();
         dateCreatedObj.put(DATE_KEY, ServerValue.TIMESTAMP);
@@ -36,6 +43,22 @@ public class ShoppingList {
 
     public String getOwner() {
         return owner;
+    }
+
+    public boolean isShopping() {
+        return isShopping;
+    }
+
+    public void setShopping(boolean shopping) {
+        isShopping = shopping;
+    }
+
+    public HashMap<String, User> getUsersShopping() {
+        return usersShopping;
+    }
+
+    public void setUsersShopping(HashMap<String, User> usersShopping) {
+        this.usersShopping = usersShopping;
     }
 
     public HashMap<String, Object> getDateCreated() {

@@ -87,7 +87,7 @@ public class CreateAccountActivity extends BaseActivity {
      * Create new account using Firebase email/password provider
      */
     public void onCreateAccountPressed(View view) {
-        final String userEmail = mEditTextEmailCreate.getText().toString();
+        final String userEmail = mEditTextEmailCreate.getText().toString().toLowerCase();
         final String userEmailKey = userEmail.replaceAll("\\.", ",");
         final String userPassword = mEditTextPasswordCreate.getText().toString();
         final String userName = mEditTextUsernameCreate.getText().toString();
@@ -148,7 +148,14 @@ public class CreateAccountActivity extends BaseActivity {
 
                         }
                     });
+                    String successfulCreationMessage = getString(R.string.toast_account_created);
 
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+                    intent.putExtra(Intent.EXTRA_TEXT, successfulCreationMessage);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
                 }
                 else {
                     try {

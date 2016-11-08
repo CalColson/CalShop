@@ -7,6 +7,7 @@ import com.example.cal.calshop.R;
 import com.example.cal.calshop.model.Item;
 import com.example.cal.calshop.model.ShoppingList;
 import com.example.cal.calshop.utils.Constants;
+import com.example.cal.calshop.utils.Utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
@@ -60,7 +61,7 @@ public class AddListItemDialogFragment extends EditListDialogFragment {
                 Constants.KEY_ITEMS).child(mListId);
         DatabaseReference listRef = Constants.FIREBASE_LOCATION_ACTIVE_LISTS.child(mListId);
 
-        String owner = Constants.DEFAULT_OWNER;
+        String owner = Utils.getCurrentUserEmail(getActivity());;
         Item item = new Item(mEditTextForList.getText().toString(), owner);
 
         if (!item.getItemName().equals("")) {

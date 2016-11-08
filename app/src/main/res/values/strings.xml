@@ -30,6 +30,9 @@
     == Active List Strings ==
 
      -->
+    <!-- Title append for main activity -->
+    <string name="lists_title_append">\'s Lists</string>
+
     <!-- Add List Dialog-->
     <string name="hint_add_shopping_list">Create a list</string>
 
@@ -137,6 +140,9 @@
     <string name="progress_dialog_authenticating_with_firebase">Authenticating with Firebase…</string>
     <string name="progress_dialog_creating_user_with_firebase">Attempting to create account…</string>
     <string name="progress_dialog_check_inbox">Please check your inbox for your password</string>
+
+    <!-- Account Creation -->
+    <string name="toast_account_created">Account successfully created. Please login</string>
 
     <!-- Errors -->
     <string name="dialog_title_error">Error</string>

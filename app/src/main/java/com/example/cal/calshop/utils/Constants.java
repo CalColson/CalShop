@@ -12,12 +12,17 @@ public final class Constants {
 
     public final static String KEY_LISTS = "activeLists";
     public final static String KEY_LIST_NAME = "listName";
+    public final static String KEY_LIST_IS_SHOPPING = "shopping";
+    public static final String KEY_LIST_USERS_SHOPPING = "usersShopping";
     public final static String KEY_TIMESTAMP_LAST_CHANGED = "dateLastChanged";
     public final static String KEY_DATE = "date";
     public final static String KEY_LIST_ID = "listId";
 
     public final static String KEY_ITEMS = "shoppingListItems";
     public final static String KEY_ITEM_NAME = "itemName";
+    public final static String KEY_ITEM_BOUGHT_STATUS = "isBought";
+    //public final static String KEY_ITEM_BOUGHT_TRUE = "true";
+    //public final static String KEY_ITEM_BOUGHT_FALSE = "false";
     public final static String KEY_ITEM_ID = "itemId";
 
     public final static String KEY_USERS = "appUsers";
@@ -53,6 +58,14 @@ public final class Constants {
      * Constants for bundles, extras and shared preferences keys
      */
     public static final String KEY_LAYOUT_RESOURCE = "LAYOUT_RESOURCE";
+
+    public static final String PREF_PROVIDER_PASSWORD = "passwordLogin";
+    public static final String PREF_PROVIDER_GOOGLE = "googleLogin";
+
+    //Shared preferences keys
+    public static final String KEY_PREF_USERNAME = "userName";
+    public static final String KEY_PREF_ENCODED_EMAIL = "emailPref";
+    public static final String KEY_PREF_PROVIDER = "providerPref";
 
 
 }

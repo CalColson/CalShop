@@ -3,8 +3,10 @@ package com.example.cal.calshop.ui.login;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,6 +23,7 @@ import com.example.cal.calshop.model.User;
 import com.example.cal.calshop.ui.BaseActivity;
 import com.example.cal.calshop.ui.MainActivity;
 import com.example.cal.calshop.utils.Constants;
+import com.example.cal.calshop.utils.Utils;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -35,6 +38,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +54,8 @@ public class LoginActivity extends BaseActivity {
     private ProgressDialog mAuthProgressDialog;
     private EditText mEditTextEmailInput, mEditTextPasswordInput;
 
+    private FirebaseAuth mAuth;
+
     /**
      * Variables related to Google Login
      */
@@ -62,6 +68,15 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null && !intent.hasExtra(Intent.EXTRA_TEXT)) {
+            Intent autoLogIntent = new Intent(LoginActivity.this, MainActivity.class);
+            autoLogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(autoLogIntent);
+            finish();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -69,6 +84,11 @@ public class LoginActivity extends BaseActivity {
          * Link layout elements from XML and setup progress dialog
          */
         initializeScreen();
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            String message = intent.getStringExtra(Intent.EXTRA_TEXT);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+
 
         /**
          * Call signInPassword() when user taps "Done" keyboard action
@@ -156,14 +176,27 @@ public class LoginActivity extends BaseActivity {
 
         mAuthProgressDialog.show();
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (mAuthProgressDialog.isShowing()) mAuthProgressDialog.dismiss();
 
                         if (task.isSuccessful()) {
+                            String encodedEmail = Utils.encodeEmail(mAuth.getCurrentUser().getEmail());
+                            DatabaseReference ref = Constants.FIREBASE_LOCATION_ACTIVE_USERS.child(encodedEmail);
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    User user = dataSnapshot.getValue(User.class);
+                                    setAuthenticatedUserPasswordProvider(mAuth.getCurrentUser(), user.getName());
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            });
+
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -199,23 +232,37 @@ public class LoginActivity extends BaseActivity {
     /**
      * Helper method that makes sure a user is created if the user
      * logs in with Firebase's email/password provider.
-     *
-     * @param authData AuthData object returned from onAuthenticated
-     */
+     * */
 
-    //Deprecated Code, we'll see if we need to replace it later
-//    private void setAuthenticatedUserPasswordProvider(AuthData authData) {
-//    }
-//
-//    /**
-//     * Helper method that makes sure a user is created if the user
-//     * logs in with Firebase's Google login provider.
-//     *
-//     * @param authData AuthData object returned from onAuthenticated
-//     */
-//    private void setAuthenticatedUserGoogle(AuthData authData) {
-//
-//    }
+    private void setAuthenticatedUserPasswordProvider(FirebaseUser currentUser, String userName) {
+        String email = currentUser.getEmail();
+        String encodedEmail = Utils.encodeEmail(email);
+        String provider = Constants.PREF_PROVIDER_PASSWORD;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.KEY_PREF_USERNAME, userName);
+        editor.putString(Constants.KEY_PREF_ENCODED_EMAIL, encodedEmail);
+        editor.putString(Constants.KEY_PREF_PROVIDER, provider);
+        editor.commit();
+    }
+
+    /**
+     * Helper method that makes sure a user is created if the user
+     * logs in with Firebase's Google login provider.
+     */
+    private void setAuthenticatedUserGoogle(FirebaseUser currentUser, String userName) {
+        String email = currentUser.getEmail();
+        String encodedEmail = Utils.encodeEmail(email);
+        String provider = Constants.PREF_PROVIDER_GOOGLE;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.KEY_PREF_USERNAME, userName);
+        editor.putString(Constants.KEY_PREF_ENCODED_EMAIL, encodedEmail);
+        editor.putString(Constants.KEY_PREF_PROVIDER, provider);
+        editor.commit();
+    }
 
     /**
      * Show error toast to users
@@ -229,16 +276,14 @@ public class LoginActivity extends BaseActivity {
      * Signs you into ShoppingList++ using the Google Login Provider
      */
     private void loginWithGoogle() {
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
-
         AuthCredential credential = GoogleAuthProvider.getCredential(mGoogleAccount.getIdToken(), null);
-        auth.signInWithCredential(credential).addOnCompleteListener(
+        mAuth.signInWithCredential(credential).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            final String userEmail = auth.getCurrentUser().getEmail();
-                            final String userName = auth.getCurrentUser().getDisplayName();
+                            final String userEmail = mAuth.getCurrentUser().getEmail().toLowerCase();
+                            final String userName = mAuth.getCurrentUser().getDisplayName();
                             final String userEmailKey = userEmail.replaceAll("\\.", ",");
 
                             DatabaseReference ref = Constants.FIREBASE_LOCATION_ACTIVE_USERS
@@ -261,6 +306,8 @@ public class LoginActivity extends BaseActivity {
                                 }
                             });
 
+                            mAuthProgressDialog.dismiss();
+                            setAuthenticatedUserGoogle(mAuth.getCurrentUser(), userName);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

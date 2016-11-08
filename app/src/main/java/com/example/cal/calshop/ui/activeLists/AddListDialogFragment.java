@@ -17,6 +17,7 @@ import com.example.cal.calshop.BuildConfig;
 import com.example.cal.calshop.R;
 import com.example.cal.calshop.model.ShoppingList;
 import com.example.cal.calshop.utils.Constants;
+import com.example.cal.calshop.utils.Utils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -99,7 +100,7 @@ public class AddListDialogFragment extends DialogFragment {
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         String userEnteredName = mEditTextListName.getText().toString();
-        String owner = Constants.DEFAULT_OWNER;
+        String owner = Utils.getCurrentUserEmail(getActivity());
 
         ShoppingList sList = new ShoppingList(userEnteredName, owner);
         rootRef.child(Constants.KEY_LISTS).push().setValue(sList);
